@@ -1100,3 +1100,85 @@ Feed giornaliero Handelsregister
 ```
 
 **Alternativa scartata — Selenium/Playwright su Google Search:** fattibilità 40%, manutenzione continua contro sistemi anti-bot Google, proxy rotativi ~20-50€/mese, insostenibile a lungo termine.
+
+---
+## DTR-047 — cities.json: struttura per paese con nomi geografici ufficiali
+
+**Data:** 2026-06-13
+**Stato:** Accettata — implementata in M7
+
+**Decisione:** Le città non sono più definite in `config.json`. Un file separato `assets/cities/cities.json` contiene la lista delle città raggruppate per paese. Il campo `cities_file` in `config.json` indica il percorso del file.
+
+**Struttura `cities.json`:**
+```json
+[
+  {
+    "country": "Germany",
+    "cities": ["Berlin", "München", "Hamburg"]
+  },
+  {
+    "country": "Italy",
+    "cities": ["Roma", "Milano", "Tolmezzo"]
+  }
+]
+```
+
+**Regola sui nomi delle città:**
+Il nome della città deve corrispondere al nome ufficiale sulla cartografia nazionale del paese. In paesi multilingua (es. Svizzera, Belgio), si usa il nome nella lingua parlata nella zona geografica dove la città si trova — es. "Genève" per Ginevra francofona, "Zürich" per Zurigo germanofona, "Lugano" per il Ticino italofono.
+
+**Motivazione:**
+- HERE Geocoding API restituisce risultati più precisi con il nome ufficiale locale
+- Evita ambiguità su città omonime in paesi diversi
+- Coerente con il comportamento atteso da un utente locale
+
+**Breaking change in `config.json`:**
+- Rimossi: `cities`, `countries`
+- Aggiunto: `"cities_file": "assets/cities/cities.json"`
+
+**`cities.json` è gitignored** — si committa `cities.example.json` con struttura vuota. L'utente copia, rinomina e popola con le proprie città.
+
+---
+
+## DTR-048 — CitiesLoader: flatten a stringa "city, country" per GeoCache
+
+**Data:** 2026-06-13
+**Stato:** Accettata — implementata in M7
+
+**Decisione:** `CitiesLoader.ts` carica `cities.json`, valida con Zod e restituisce un array piatto di stringhe `"${city}, ${country}"` — la stessa chiave già usata da GeoCache. Nessuna interfaccia `CityEntry` intermedia necessaria.
+
+```typescript
+// Output di CitiesLoader.load():
+[
+  "Berlin, Germany",
+  "München, Germany",
+  "Roma, Italy",
+  "Milano, Italy",
+]
+```
+
+**Motivazione:**
+- GeoCache usa già `"${city}, ${country}"` come chiave — zero modifiche
+- Il flatten è un `flatMap` di tre righe — nessuna complessità aggiuntiva
+- Evita un'interfaccia intermedia che non aggiunge valore
+
+---
+
+## DTR-049 — coverage_mode: selezione sorgente città (pianificata M11+)
+
+**Data:** 2026-06-13
+**Stato:** Pianificata (M11+)
+
+**Decisione:** In M11+ verrà introdotto il campo `coverage_mode` in `config.json` per pilotare la sorgente delle città:
+
+```json
+"coverage_mode": "file"   // default — usa cities.json
+"coverage_mode": "full"   // tutti i comuni del paese da SQLite
+```
+
+**Motivazione:**
+- Benjamin richiede copertura nazionale (~11.000 comuni in Germania) — non gestibile con un file manuale
+- SQLite (M11+) sarà la sorgente per la copertura completa
+- `cities.json` rimane per utenti che vogliono controllo granulare
+- `"full"` userà la tabella `cities` del database, filtrata per paese
+
+**`cities.json` rimane valido** in tutti i casi come override esplicito — chi vuole un sottoinsieme specifico può sempre usarlo indipendentemente dal `coverage_mode`.

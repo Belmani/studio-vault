@@ -62,9 +62,9 @@ SpotCast è uno strumento di lead generation locale che ogni mattina cerca su Go
 ## Indice documenti
 
 ### Documentazione tecnica
-- [DTR.md](./docs/DTR.md) — tutte le decisioni architetturali con motivazione
-- [README.md](README_USER.md) — guida utente
-- [README_DEV.md](./docs/README_DEV.md) — guida per sviluppatori
+- [DTR.md](SpotCast_DTR.md) — tutte le decisioni architetturali con motivazione
+- [README.md](SpotCast_README_USER.md) — guida utente
+- [README_DEV.md](SpotCast_README_DEV.md) — guida per sviluppatori
 
 ### Grooming
 - [GRM_SpotCast_M1_M6.md](./grooming/GRM_SpotCast_M1_M6.md) — grooming completo M1→M6
@@ -85,7 +85,7 @@ SpotCast è uno strumento di lead generation locale che ogni mattina cerca su Go
 
 ## Decisioni chiave
 
-Le decisioni complete sono nel [DTR.md](./docs/DTR.md). Le più rilevanti per il P.O.:
+Le decisioni complete sono nel [DTR.md](SpotCast_DTR.md). Le più rilevanti per il P.O.:
 
 - **TypeScript** invece di Python — stack del team, nessuna competenza Python (DTR-001)
 - **Solo Google Places API** — i dati fittizi dello script originale non hanno valore in produzione (DTR-002)

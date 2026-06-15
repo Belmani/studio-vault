@@ -45,7 +45,7 @@ Il pattern dei file è sempre: `<SIGLA>_<Progetto>_<Milestone>_<Topic>.md`
 
 | Progetto                         | Descrizione                               | Stato                        |
 | -------------------------------- | ----------------------------------------- | ---------------------------- |
-| [SpotCast](./SpotCast/README.md) | Lead generation automatica da Google Maps | 🟢 In sviluppo — v0.1.0      |
+| [SpotCast](SpotCast_README.md) | Lead generation automatica da Google Maps | 🟢 In sviluppo — v0.1.0      |
 | NomadSync                        | Sincronizzazione cartelle via GitHub      | 🟡 Backend 95% — UI in avvio |
 | ForgeUI                          | Design system JavaFX per Maven Central    | 🟡 M2 in corso               |
 
